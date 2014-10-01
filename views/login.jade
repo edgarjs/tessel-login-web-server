@@ -1,0 +1,31 @@
+html
+  head
+    title Tessel Night - Login
+    script(src="//code.jquery.com/jquery-1.11.0.min.js", type="text/javascript")
+    script(src="//cdn.pubnub.com/pubnub.min.js", type="text/javascript")
+    script(type="text/javascript").
+      var pubnub = PUBNUB.init({
+        publish_key: "demo",
+        subscribe_key: "demo"
+      });
+      pubnub.subscribe({
+        channel: 'rfid:login:try',
+        message: function (data) {
+          console.log('trying to log in with card', data);
+          $('#rfid_card').val(data).parents('form').submit();
+        }
+      });
+  body
+    h1 Please log in
+    strong If you have an RFID card, you can log in with it.
+    p - OR -
+    form(action="/login", method="post")
+      input#rfid_card(type="hidden", name="rfid_card")
+      p
+        label(for="username") Username
+        input#username(type="text", name="username", placeholder="username")
+      p
+        label(for="password") Password
+        input#password(type="password", name="password", placeholder="password")
+      p
+        input(type="submit", value="Log in")
